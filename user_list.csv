@@ -1,0 +1,8 @@
+username,group,reset_password,admin
+admin,,False,True
+admin2,,False,True
+admin3,,False,True
+user1,group1,False,False
+user2,group1,False,False
+user3,group2,False,False
+user4,group2,False,False
