@@ -195,7 +195,21 @@ def main():
     # One-time setup: Create the IAM groups and attach the policies
     create_iam_group(iam_client, llm_group_name)
     attach_policy_to_group(iam_client, llm_group_name)
+    
+    # Attach AmazonDynamoDBReadOnlyAccess policy to LLM_League_Users group
+    try:
+        iam_client.attach_group_policy(
+            GroupName=llm_group_name,
+            PolicyArn='arn:aws:iam::aws:policy/AmazonDynamoDBReadOnlyAccess'
+        )
+        print(f"AmazonDynamoDBReadOnlyAccess policy attached to group '{llm_group_name}'.")
+    except botocore.exceptions.ClientError as e:
+        if e.response['Error']['Code'] == 'EntityAlreadyExists':
+            print(f"AmazonDynamoDBReadOnlyAccess policy already attached to group '{llm_group_name}'.")
+        else:
+            print(f"Failed to attach AmazonDynamoDBReadOnlyAccess policy to group '{llm_group_name}': {e}")
     create_iam_group(iam_client, admin_group_name)
+
     # Attach AdministratorAccess policy to the Administrators group
     try:
         iam_client.attach_group_policy(
